@@ -17,44 +17,48 @@ def int2list(x):
         x = [x]
     return x
 
-def compare(x1, x2):
+def compare(x1, x2, debug=False):
     global is_right_order
     while is_right_order == -1:
         for i, left in enumerate(x1):
+            #print(i)
             try: 
                 right = x2[i]
             except IndexError:
-                is_right_order = True
-                break;
-            print(f"{left} vs {right}")
+                is_right_order = False
+                if debug:
+                    print(f"len({x1}) > len({x2})")
+                sys.exit();
             
             if is_list(left) == False and is_list(right) == False:
                 if left < right:
                     is_right_order = True
+                    if debug:
+                        print(f"{left} < {right}")
                     break;
                 elif left > right:
                     is_right_order = False
+                    if debug:
+                        print(f"{left} > {right}")
                     break;
-            
-            # elif is_list(left) == True and is_list(right) == True:
-            #     x1 = left
-            #     x2 = right
-            #     compare(x1, x2)
                 
             else:
-                x1 = int2list(left)
-                x2 = int2list(right)            
-                #print(f">> {left} vs {right}")
-                compare(x1, x2)
-                
+                if debug:
+                        print(f">> {left} vs {right}")
+                compare(int2list(left), int2list(right), debug=debug)
+                if is_right_order == True or is_right_order == False:
+                    break;                    
+                    
+        if is_right_order==-1 and len(x1)<len(x2):
+            is_right_order = True
+            if debug:
+                print(f"len({x1}) < len({x2})")
+            break;
         return 
 
-
 if __name__ == "__main__":
-    #x1 = [[1],[2,3,4]]
-    #x2 = [[1],4]
-    x1 = [1]
-    x2 = [1]
+    x1 = [[1],[2,3,4]]
+    x2 = [[1],4]
     is_right_order = -1
-    compare(x1, x2)
+    compare(x1, x2, debug=True)
     print(is_right_order)
